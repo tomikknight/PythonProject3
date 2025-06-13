@@ -5,7 +5,7 @@ width = 1024
 height = 800
 surface = pg.display.set_mode((width, height))
 clock = pg.time.Clock()
-
+x = 0
 kni = 'knight/knight_stand.png'
 move_left1 = False
 move_right1 = False
