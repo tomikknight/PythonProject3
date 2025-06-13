@@ -5,13 +5,13 @@ width = 1024
 height = 800
 surface = pg.display.set_mode((width, height))
 clock = pg.time.Clock()
-x = 0
 kni = 'knight/knight_stand.png'
 move_left1 = False
 move_right1 = False
 move_up1 = False
 move_down1 = False
 speed = 5
+
 
 
 while True:
@@ -37,6 +37,7 @@ while True:
                 move_up1 = False
             elif event.key == pg.K_DOWN:
                 move_down1 = False
+    surface.fill(('#FFFFFF'))
 
 
     if move_left1 and kni > 0:
@@ -48,7 +49,7 @@ while True:
     elif move_down1 and kni + 70 < height:
         kni += speed
 
-    pg.fill(255, 255, 255)
+
 
     clock.tick(60)
     pg.display.update()
