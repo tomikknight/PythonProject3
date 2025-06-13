@@ -6,8 +6,8 @@ pg.font.init()
 clock = pg.time.Clock()
 
 
-width = 3820
-height = 2460
+width = 1200
+height = 800
 white = (255, 255, 255)
 black = (0, 0, 0)
 green = (34, 177, 76)
