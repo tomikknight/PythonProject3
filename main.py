@@ -21,14 +21,10 @@ kni_le_sta_img = pg.image.load('knight/left/knight_stand_l.png')
 kni_ri_sta_img = pg.image.load('knight/right/knight_stand_r.png')
 
 
-kni_l_s_rect = kni_le_sta_img.get_rect()
-kni_l_s_rect.x = WIDTH // 2
-kni_l_s_rect.y = HEIGHT // 2
-
-kni_r_s_rect = kni_ri_sta_img.get_rect()
-kni_r_s_rect.x = WIDTH // 2
-kni_r_s_rect.y = HEIGHT // 2
-
+current_sprite = kni_ri_sta_img
+sprite_rect = current_sprite.get_rect()
+sprite_rect.x = WIDTH // 2
+sprite_rect.y = HEIGHT // 2
 
 speed = 6
 
@@ -44,36 +40,37 @@ while True:
         elif event.type == pg.KEYDOWN:
             if event.key == pg.K_d:
                 move_right = True
+                current_sprite = kni_ri_sta_img
             elif event.key == pg.K_a:
                 move_left = True
+                current_sprite = kni_le_sta_img
 
         elif event.type == pg.KEYUP:
             if event.key == pg.K_d:
                 move_right = False
+                current_sprite = kni_le_sta_img
             elif event.key == pg.K_a:
                 move_left = False
+                current_sprite = kni_ri_sta_img
 
 
     if move_right:
-        if kni_r_s_rect.x + kni_ri_sta_img.get_rect().width + speed < WIDTH:
-            kni_r_s_rect.x += speed
+        if sprite_rect.x + current_sprite.get_rect().width + speed < WIDTH:
+            sprite_rect.x += speed
     elif move_left:
-        if kni_l_s_rect.x - speed > 0:
-            kni_l_s_rect.x -= speed
+        if sprite_rect.x - speed > 0:
+            sprite_rect.x -= speed
 
 
     surface.fill(WHITE)
-    if move_right:
-        surface.blit(kni_ri_sta_img, kni_r_s_rect)
-    elif move_left:
-        surface.blit(kni_le_sta_img, kni_l_s_rect)
+    surface.blit(current_sprite, sprite_rect)
 
 
-    if kni_r_s_rect.x + kni_ri_sta_img.get_rect().width + speed < WIDTH:
-        surface.blit(kni_ri_sta_img, kni_r_s_rect)
+    if sprite_rect.x + current_sprite.get_rect().width + speed < WIDTH:
+        surface.blit(current_sprite, sprite_rect)
     else:
-        kni_l_s_rect.x = WIDTH - kni_ri_sta_img.get_rect().width
-        surface.blit(kni_ri_sta_img, kni_l_s_rect)
+        sprite_rect.x = WIDTH - current_sprite.get_rect().width
+        surface.blit(current_sprite, sprite_rect)
 
     pg.display.update()
     clock.tick(FPS)
