@@ -12,24 +12,32 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (34, 177, 76)
 YELLOW = (255, 242, 0)
-FPS = 60
+FPS = 120
 FONT = pg.font.SysFont('Arial', 35)
 surface = pg.display.set_mode((WIDTH, HEIGHT))
 
 
-kni_le_sta_img = pg.image.load('knight/left/knight_stand_l.png')
-kni_ri_sta_img = pg.image.load('knight/right/knight_stand_r.png')
-
+kni_le_sta_img = pg.image.load('images/knight/left/knight_stand_l.png')
+kni_ri_sta_img = pg.image.load('images/knight/right/knight_stand_r.png')
+floor_img = pg.image.load('images/no knight/floor/floor1.png')
 
 current_sprite = kni_ri_sta_img
 sprite_rect = current_sprite.get_rect()
-sprite_rect.x = WIDTH // 2
-sprite_rect.y = HEIGHT // 2
+sprite_rect.x = WIDTH // 2.05
+sprite_rect.y = HEIGHT // 10
 
-speed = 6
+floor_rect = floor_img.get_rect()
+floor_rect.x = 0
+floor_rect.y = HEIGHT - floor_img.get_rect().height + 85
+
+speed = 5
+speed_up_jump = 5.5
+speed_down_jump = 5.5
 
 move_left = False
 move_right = False
+jump = False
+lives = 5
 
 while True:
     for event in pg.event.get():
@@ -44,14 +52,18 @@ while True:
             elif event.key == pg.K_a:
                 move_left = True
                 current_sprite = kni_le_sta_img
+           # elif event.key == pg.K_SPACE:
+           #     move_left = True
+           #     current_sprite =
+
 
         elif event.type == pg.KEYUP:
             if event.key == pg.K_d:
                 move_right = False
-                current_sprite = kni_le_sta_img
+                current_sprite = kni_ri_sta_img
             elif event.key == pg.K_a:
                 move_left = False
-                current_sprite = kni_ri_sta_img
+                current_sprite = kni_le_sta_img
 
 
     if move_right:
@@ -63,6 +75,10 @@ while True:
 
 
     surface.fill(WHITE)
+
+    for x in range(0, WIDTH + floor_img.get_rect().width, floor_img.get_rect().width):
+        surface.blit(floor_img, (x, floor_rect.y))
+
     surface.blit(current_sprite, sprite_rect)
 
 
