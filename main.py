@@ -1,21 +1,18 @@
 import pygame as pg
 from random import randint
 
-
 pg.init()
 pg.font.init()
 clock = pg.time.Clock()
-
 
 WIDTH, HEIGHT = 1800, 1000
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (34, 177, 76)
 YELLOW = (255, 242, 0)
-FPS = 120
+FPS = 60
 FONT = pg.font.SysFont('Arial', 35)
 surface = pg.display.set_mode((WIDTH, HEIGHT))
-
 
 kni_le_sta_img = pg.image.load('images/knight/left/knight_stand_l.png')
 kni_ri_sta_img = pg.image.load('images/knight/right/knight_stand_r.png')
@@ -30,9 +27,7 @@ floor_rect = floor_img.get_rect()
 floor_rect.x = 0
 floor_rect.y = HEIGHT - floor_img.get_rect().height + 85
 
-speed = 5
-speed_up_jump = 5.5
-speed_down_jump = 5.5
+speed = 6
 
 move_left = False
 move_right = False
@@ -52,10 +47,6 @@ while True:
             elif event.key == pg.K_a:
                 move_left = True
                 current_sprite = kni_le_sta_img
-           # elif event.key == pg.K_SPACE:
-           #     move_left = True
-           #     current_sprite =
-
 
         elif event.type == pg.KEYUP:
             if event.key == pg.K_d:
@@ -65,7 +56,6 @@ while True:
                 move_left = False
                 current_sprite = kni_le_sta_img
 
-
     if move_right:
         if sprite_rect.x + current_sprite.get_rect().width + speed < WIDTH:
             sprite_rect.x += speed
@@ -73,24 +63,13 @@ while True:
         if sprite_rect.x - speed > 0:
             sprite_rect.x -= speed
 
-
     surface.fill(WHITE)
-
-    for x in range(0, WIDTH + floor_img.get_rect().width, floor_img.get_rect().width):
-        surface.blit(floor_img, (x, floor_rect.y))
-
+    surface.blit(floor_img, floor_rect)
     surface.blit(current_sprite, sprite_rect)
 
 
-    if sprite_rect.x + current_sprite.get_rect().width + speed < WIDTH:
-        surface.blit(current_sprite, sprite_rect)
-    else:
-        sprite_rect.x = WIDTH - current_sprite.get_rect().width
-        surface.blit(current_sprite, sprite_rect)
-
     pg.display.update()
     clock.tick(FPS)
-
 
 
 
