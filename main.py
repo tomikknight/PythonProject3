@@ -21,10 +21,6 @@ floor2_2img = pg.image.load('images/no knight/floor/floor2_2.png')
 floor2_1img = pg.image.load('images/no knight/floor/floor2_1.png')
 floor2_3img = pg.image.load('images/no knight/floor/floor2_3.png')
 
-# как это работает - есть функция scale, при помощи которой мы изменяем размеры спрайта. Мы указываем в функции
-# в качестве ширины ширину экрана, в качестве высоты - высоту, которая была.
-# можно сохранить пропорцию, чтобы при изменении ширины изменить и высоту, для этого необходимо пересчитать высоту
-# и в 25-ой строке вместо floor_height вписать высоту.
 
 current_sprite = kni_ri_sta_img
 sprite_rect = current_sprite.get_rect()
