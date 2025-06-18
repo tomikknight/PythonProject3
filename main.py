@@ -23,6 +23,10 @@ kni_le_sta_img = pg.image.load('images/knight/left/knight_stand_l.png').convert_
 kni_ri_sta_img = pg.image.load('images/knight/right/knight_stand_r.png').convert_alpha()
 attack1_le = pg.image.load('images/knight/attack/attack1_le.png').convert_alpha()
 attack1_ri = pg.image.load('images/knight/attack/attack1_ri.png').convert_alpha()
+
+attack1_le = pg.transform.scale(attack1_le, (attack1_le.get_width(), 135))
+attack1_ri = pg.transform.scale(attack1_ri, (attack1_ri.get_width(), 135))
+
 floor_img = pg.image.load('images/no knight/floor/floor1.png').convert_alpha()
 floor2_2img = pg.image.load('images/no knight/floor/floor2_2.png').convert_alpha()
 floor2_1img = pg.image.load('images/no knight/floor/floor2_1.png').convert_alpha()
@@ -59,8 +63,8 @@ move_right = False
 
 # Настройки времени атаки
 at_cd = 0
-cd_go = 0.2
-at_go = 0.1
+cd_go = 0.2  # время перезарядки (нельзя атаковать)
+at_go = 0.1  # длительность анимации атаки
 
 # жизни/мана
 lives = 5
@@ -69,6 +73,8 @@ max_soul = 9
 
 # управление2
 while True:
+    current_time = time.time()  # текущее время для расчета длительности
+
     for event in pg.event.get():
         if event.type == pg.QUIT:
             pg.quit()
@@ -96,33 +102,40 @@ while True:
 
         if event.type == pg.MOUSEBUTTONDOWN:
             if event.button == 1:
-                if at_cd == 0:
+                if at_cd == 0:  # можно атаковать только если нет перезарядки
                     attack = True
-                    cd_start_time = time.time()
+                    cd_start_time = current_time  # запоминаем время начала атаки
                     if current_sprite == kni_ri_sta_img:
-                        b = kni_ri_sta_img
+                        # сохраняем предыдущий спрайт для возврата
                         current_sprite = attack1_ri
                     elif current_sprite == kni_le_sta_img:
-                        b = kni_le_sta_img
                         current_sprite = attack1_le
+                    at_cd = 1  # устанавливаем флаг перезарядки
 
-            if at_cd > 0:
-                elapsed_time = time.time() - cd_start_time
+    # Обработка завершения анимации атаки
+    if attack:
+        # Проверяем, прошло ли время атаки
+        if current_time - cd_start_time >= at_go:
+            attack = False  # завершаем анимацию атаки
+            # Возвращаем к обычному спрайту
+            if move_right:
+                current_sprite = kni_ri_sta_img
+            elif move_left:
+                current_sprite = kni_le_sta_img
+            else:
+                # Если не двигаемся, возвращаем к последнему направлению
+                if current_sprite == attack1_ri:
+                    current_sprite = kni_ri_sta_img
+                else:
+                    current_sprite = kni_le_sta_img
 
-                if elapsed_time >= cd_go:
-                    at_cd = 0
-                    if move_right:
-                        current_sprite = kni_ri_sta_img
-                    elif move_left:
-                        current_sprite = kni_le_sta_img
-                    else:
-                        current_sprite = kni_ri_sta_img
+    # Обработка завершения перезарядки
+    if at_cd > 0:
+        # Проверяем, прошло ли время перезарядки
+        if current_time - cd_start_time >= cd_go:
+            at_cd = 0  # сбрасываем перезарядку
 
-
-                if elapsed_time >= at_go:
-                    attack = False
-
-# право-лево (повороты)
+    # горизонтальное движение
     if move_right:
         if sprite_rect.x + current_sprite.get_rect().width + speed < WIDTH:
             sprite_rect.x += speed
@@ -130,15 +143,11 @@ while True:
         if sprite_rect.x - speed > 0:
             sprite_rect.x -= speed
 
-    # Отображение cooldown'а атаки
-    if at_cd > 0:
-        elapsed_time = time.time() - cd_start_time
-
-# вертикальное движение
+    # вертикальное движение
     velocity_y += gravity
     sprite_rect.y += velocity_y
 
-# касания пола (проверка)
+    # проверка коллизии с землей
     if sprite_rect.y >= ground_y:
         sprite_rect.y = ground_y
         velocity_y = 0
@@ -146,10 +155,10 @@ while True:
     else:
         on_ground = False
 
-# рисование
+    # рисование
     surface.fill(BLUE)
 
-# Отрисовка спрайтов
+    # Отрисовка спрайтов
     surface.blit(current_sprite, sprite_rect)
 
     surface.blit(floor2_3img, floor2_3rect)
@@ -157,7 +166,7 @@ while True:
     surface.blit(floor2_1img, floor2_1rect)
     surface.blit(floor_img, floor_rect)
 
-# Отображение жизней и маны
+    # Отображение жизней и маны
     lives_text = FONT.render(f"Lives: {lives}", True, BLACK)
     soul_text = FONT.render(f"Soul: {soul}/{max_soul}", True, BLACK)
     surface.blit(lives_text, (10, 10))
@@ -165,8 +174,6 @@ while True:
 
     pg.display.update()
     clock.tick(FPS)
-
-
 
 
 
