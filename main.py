@@ -110,6 +110,7 @@ while True:
                         current_sprite = attack1_ri
                     elif current_sprite == kni_le_sta_img:
                         current_sprite = attack1_le
+                        sprite_rect.x -= 200
                     at_cd = 1  # устанавливаем флаг перезарядки
 
     # Обработка завершения анимации атаки
@@ -122,12 +123,14 @@ while True:
                 current_sprite = kni_ri_sta_img
             elif move_left:
                 current_sprite = kni_le_sta_img
+                sprite_rect.x += 200
             else:
                 # Если не двигаемся, возвращаем к последнему направлению
                 if current_sprite == attack1_ri:
                     current_sprite = kni_ri_sta_img
                 else:
                     current_sprite = kni_le_sta_img
+                    sprite_rect.x += 200
 
     # Обработка завершения перезарядки
     if at_cd > 0:
